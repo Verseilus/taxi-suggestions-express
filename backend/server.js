@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDatabase = require("./database");
 const Vehicle = require("./vehicle");
-const makeSuggestions = require("./business-logic")
+const makeSuggestions = require("./business-logic");
 
 const app = express();
 const port = 3000;
@@ -19,12 +19,16 @@ app.get("/suggestions", async (req, res) => {
 
     // validate passengers, must be integer>=1
     if (!Number.isInteger(passengers) || passengers < 1) {
-      return res.status(400).json({ error: "Passengers must be an integer, minimum 1." });
+      return res
+        .status(400)
+        .json({ error: "Passengers must be an integer, minimum 1." });
     }
 
     // validate distance, must be a number>=1
     if (Number.isNaN(distance) || distance < 1) {
-      return res.status(400).json({ error: "Distance must be a positive number, minimum 1." });
+      return res
+        .status(400)
+        .json({ error: "Distance must be a positive number, minimum 1." });
     }
 
     // select all vehicles (excluding "__v" revision number field)
@@ -32,7 +36,7 @@ app.get("/suggestions", async (req, res) => {
     console.log(vehiclesQuery);
     res.json(makeSuggestions(vehiclesQuery, passengers, distance));
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(400).send(error.message);
   }
 });
 
@@ -44,7 +48,7 @@ app.post("/vehicles/add", async (req, res) => {
     const vehicle = await Vehicle.create({ capacity, range, fuel });
     res.send(`New vehicle successfully added with ID=${vehicle.id}.`);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(400).send(error.message);
   }
 });
 

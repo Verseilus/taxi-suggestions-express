@@ -38,7 +38,7 @@ By using the default docker-compose, the API is exposed on port 5000.
 + **GET @ http://localhost:[port]/suggestions?passengers=[number_of_passengers]&distance=[trip_length]**
   + *passengers*: integer, min=1
   + *distance*: number, min=1
-+ responds with an array of vehicle objects with an extra assumed profit property as in the example below:
++ responds with an array of vehicle objects with an extra assumed profit property as shown below or an error 400 message detailing the problem
 ```json
 [
     {
@@ -77,4 +77,4 @@ By using the default docker-compose, the API is exposed on port 5000.
     "fuel" : "mild hybrid"
 }
 ```
-+ responds with a message containing the ID of the newly added vehicle
++ responds with a message containing the ID of the newly added vehicle or an error 400 message detailing the problem
