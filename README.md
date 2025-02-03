@@ -11,7 +11,7 @@ cd backend
 docker-compose build
 docker-compose up
 ```
-This starts two containers by default: one for the Node.js server and one for the MongoDB database.
+This starts two containers by default: one for the API server and one for the MongoDB database.
 
 ## Development
 For development and testing purposes you *can* install [Node.js](https://nodejs.org/) on the host machine, then install the packages and start the server using npm. You will still need to launch a MongoDB database and connect to it using Mongoose.
@@ -24,6 +24,8 @@ npm run dev
 + For testing the API, [Postman](https://www.postman.com/downloads/) can be used.
 
 ## Architecture
+![architecture](https://github.com/user-attachments/assets/ab33a876-205a-4008-ab7d-4b5597d0d520)
+*Diagram created using [Excalidraw](https://excalidraw.com/).*
 
 ## API Endpoints
 By using the default docker-compose, the API is exposed on port 5000.
