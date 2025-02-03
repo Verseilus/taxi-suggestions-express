@@ -99,9 +99,9 @@ app.get("/suggestions", async (req, res) => {
   }
 });
 
-// POST: http://localhost:[port]/add
+// POST: http://localhost:[port]/vehicles/add
 // add new vehicle to the fleet's database
-app.post("/add", async (req, res) => {
+app.post("/vehicles/add", async (req, res) => {
   try {
     const { capacity, range, fuel } = req.body;
     const vehicle = await Vehicle.create({ capacity, range, fuel });
@@ -109,6 +109,12 @@ app.post("/add", async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+
+//GET: http://localhost:[port]/
+// check whether the server is responsive
+app.get("/", (req, res) => {
+  res.json("Success.");
 });
 
 app.listen(port, () => {
