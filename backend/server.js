@@ -38,10 +38,10 @@ app.post("/vehicles/add", async (req, res) => {
   }
 });
 
-//GET: http://localhost:[port]/
+//GET: http://localhost:[port]/healthcheck
 // check whether the server is responsive
-app.get("/", (req, res) => {
-  res.json("Success.");
+app.get("/healthcheck", (req, res) => {
+  res.sendStatus(200);
 });
 
 app.listen(port, () => {
