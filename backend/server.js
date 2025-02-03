@@ -14,8 +14,18 @@ connectDatabase();
 app.get("/suggestions", async (req, res) => {
   try {
     // get query parameters
-    const passengers = req.query.passengers;
-    const distance = req.query.distance;
+    const passengers = Number(req.query.passengers);
+    const distance = Number(req.query.distance);
+
+    // validate passengers, must be integer>=1
+    if (!Number.isInteger(passengers) || passengers < 1) {
+      return res.status(400).json({ error: "Passengers must be an integer, minimum 1." });
+    }
+
+    // validate distance, must be a number>=1
+    if (Number.isNaN(distance) || distance < 1) {
+      return res.status(400).json({ error: "Distance must be a positive number, minimum 1." });
+    }
 
     // select all vehicles (excluding "__v" revision number field)
     const vehiclesQuery = await Vehicle.find({}, { __v: 0 });

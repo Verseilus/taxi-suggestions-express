@@ -36,6 +36,8 @@ By using the default docker-compose, the API is exposed on port 5000.
 
 ### Suggestions
 + **GET @ http://localhost:[port]/suggestions?passengers=[number_of_passengers]&distance=[trip_length]**
+  + *passengers*: integer, min=1
+  + *distance*: number, min=1
 + responds with an array of vehicle objects with an extra assumed profit property as in the example below:
 ```json
 [
@@ -65,7 +67,7 @@ By using the default docker-compose, the API is exposed on port 5000.
 ### Add new vehicles
 + **POST @ http://localhost:[port]/vehicles/add**, parameters must be provided in JSON format:
   + *capacity*: integer, min=1
-  + *range*: double, min=1
+  + *range*: number, min=1
   + *fuel*: string, {"gasoline", "mild hybrid", "pure electric"}
 + for example:
 ```json
