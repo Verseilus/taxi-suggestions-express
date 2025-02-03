@@ -31,10 +31,12 @@ npm run dev
 By using the default docker-compose, the API is exposed on port 5000.
 
 ### Healthcheck
+Check whether the server is running.
 + **GET @ http://localhost:[port]/healthcheck**
 + responds with 200 OK
 
 ### Suggestions
+Get vehicle suggestions (with profit) for a given trip.
 + **GET @ http://localhost:[port]/suggestions?passengers=[number_of_passengers]&distance=[trip_length]**
   + *passengers*: integer, min=1, (in persons)
   + *distance*: number, min=1, (in kilometers)
@@ -64,7 +66,8 @@ By using the default docker-compose, the API is exposed on port 5000.
     }
 ]
 ```
-### Add new vehicles
+### Add vehicles
+Add new vehicles to the taxi company's database.
 + **POST @ http://localhost:[port]/vehicles/add**, parameters must be provided in JSON format:
   + *capacity*: integer, min=1, (in persons)
   + *range*: number, min=1, (in kilometers)
