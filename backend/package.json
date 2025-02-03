@@ -1,6 +1,6 @@
 {
   "name": "taxi-suggestions-express",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "REST API suggesting taxi vehicles for trips",
   "main": "server.js",
   "scripts": {
