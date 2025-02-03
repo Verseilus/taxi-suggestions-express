@@ -1,0 +1,23 @@
+services:
+  database:
+    image: mongo:5.0.31-focal
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: taxiadmin
+      MONGO_INITDB_ROOT_PASSWORD: mdbtaxipw
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - '5000:3000'
+    depends_on:
+      - database
+      
+volumes:
+  mongodata:
+    driver: local
