@@ -8,24 +8,36 @@ app.use(express.json());
 
 connectDatabase();
 
+// calculate length of urban section of trip
+function calculateUrbanDistance(distance) {
+  // a maximum of 50 kilometres is counter as urban
+  const urbanDifference = 50 - distance;
+  return urbanDifference < 0 ? 50 : distance;
+}
+
 // whether the vehicle is able to transport the amount of people to the given distance
 function isVehicleEligible(vehicle, passengers, distance) {
-  console.log("boop");
   if (vehicle.capacity < passengers) return false;
-  console.log(vehicle);
-  // hybrid vehicles can get twice as far during urban trips (<50km) due to electric mode
-  const requiredRange = (vehicle.fuel === "mild hybrid" && distance < 50) ? distance / 2 : distance;
+
+  const urbanDistance = calculateUrbanDistance(distance);
+  const countryDistance = distance - urbanDistance;
+  // hybrid vehicles can get twice as far during urban sections (<50km) due to electric mode
+  const requiredRange =
+    vehicle.fuel === "mild hybrid"
+      ? (countryDistance + urbanDistance * 0.5) / 2
+      : distance;
+
   return !(vehicle.range < requiredRange);
 }
 
 // business logic to calculate potential profit per vehicle
 function calculateProfit(vehicle, passengers, distance) {
   let profit = 0;
-  let tripIsUrban = (distance < 50);
+  const urbanDistance = calculateUrbanDistance(distance);
+  const countryDistance = distance - urbanDistance;
 
   // travel time in minutes (doubled for urban)
-  let travelTime = distance
-  if (tripIsUrban) travelTime *= 2;
+  let travelTime = countryDistance + urbanDistance * 2;
 
   // taxi fare: 2 euro per kilometer
   profit += distance * 2;
@@ -36,14 +48,14 @@ function calculateProfit(vehicle, passengers, distance) {
   // each passenger pays the fare
   profit *= passengers;
 
-  // fuel cost (hybrid cars use electric mode during urban trips)
+  // refueling cost (doubled for gasoline)
   if (vehicle.fuel === "pure electric") {
     profit -= distance;
   }
-  else if (vehicle.fuel === "mild hybrid" && tripIsUrban) {
-    profit -= distance;
-  }
-  else {
+  // hybrid cars use electric mode during urban sections and gasoline otherwise
+  else if (vehicle.fuel === "mild hybrid") {
+    profit -= urbanDistance + countryDistance * 2;
+  } else {
     profit -= distance * 2;
   }
 
@@ -58,7 +70,11 @@ function makeSuggestions(query, passengers, distance) {
     if (isVehicleEligible(vehicle, passengers, distance)) {
       // convert Mongoose doc to POJO
       let combination = vehicle.toObject();
-      combination["assumedProfit"] = calculateProfit(vehicle, passengers, distance);
+      combination["assumedProfit"] = calculateProfit(
+        vehicle,
+        passengers,
+        distance
+      );
       vehicleCombinations.push(combination);
     }
   });
@@ -71,8 +87,8 @@ function makeSuggestions(query, passengers, distance) {
 app.get("/suggestions", async (req, res) => {
   try {
     // get query parameters
-    const passengers = req.query.passengers
-    const distance = req.query.distance
+    const passengers = req.query.passengers;
+    const distance = req.query.distance;
 
     // select all vehicles (excluding "__v" revision number field)
     const vehiclesQuery = await Vehicle.find({}, { __v: 0 });
@@ -83,9 +99,9 @@ app.get("/suggestions", async (req, res) => {
   }
 });
 
-// POST: http://localhost:[port]/vehicles
+// POST: http://localhost:[port]/add
 // add new vehicle to the fleet's database
-app.post("/vehicles", async (req, res) => {
+app.post("/add", async (req, res) => {
   try {
     const { capacity, range, fuel } = req.body;
     await Vehicle.create({ capacity, range, fuel });
@@ -93,14 +109,6 @@ app.post("/vehicles", async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
-
-app.get("/", (req, res) => { // TODO: remove
-  res.send("Hello World!");
-});
-
-app.post("/", (req, res) => { // TODO: remove
-  res.send("Got a POST request");
 });
 
 app.listen(port, () => {
