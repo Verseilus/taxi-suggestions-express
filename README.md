@@ -36,9 +36,9 @@ By using the default docker-compose, the API is exposed on port 5000.
 
 ### Suggestions
 + **GET @ http://localhost:[port]/suggestions?passengers=[number_of_passengers]&distance=[trip_length]**
-  + *passengers*: integer, min=1
-  + *distance*: number, min=1
-+ responds with an array of vehicle objects with an extra assumed profit property as shown below or an error 400 message detailing the problem
+  + *passengers*: integer, min=1, (in persons)
+  + *distance*: number, min=1, (in kilometers)
++ responds with an array of vehicle objects with an extra assumed profit property (in €/EUR) as shown below or an error 400 message detailing the problem
 ```json
 [
     {
@@ -66,8 +66,8 @@ By using the default docker-compose, the API is exposed on port 5000.
 ```
 ### Add new vehicles
 + **POST @ http://localhost:[port]/vehicles/add**, parameters must be provided in JSON format:
-  + *capacity*: integer, min=1
-  + *range*: number, min=1
+  + *capacity*: integer, min=1, (in persons)
+  + *range*: number, min=1, (in kilometers)
   + *fuel*: string, {"gasoline", "mild hybrid", "pure electric"}
 + for example:
 ```json
