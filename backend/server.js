@@ -104,8 +104,8 @@ app.get("/suggestions", async (req, res) => {
 app.post("/add", async (req, res) => {
   try {
     const { capacity, range, fuel } = req.body;
-    await Vehicle.create({ capacity, range, fuel });
-    res.send("New vehicle successfully added."); // TODO: return ID
+    const vehicle = await Vehicle.create({ capacity, range, fuel });
+    res.send(`New vehicle successfully added with ID=${vehicle.id}.`);
   } catch (error) {
     res.status(500).send(error.message);
   }
